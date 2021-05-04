@@ -24,8 +24,6 @@ public class JpaInitEntityRunner implements ApplicationRunner {
 
         Session session = entityManager.unwrap(Session.class);
 
-
-
         Customer customer = new Customer();
         session.save(customer);
         Diary diary = new Diary();

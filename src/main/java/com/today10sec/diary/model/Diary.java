@@ -3,6 +3,7 @@ package com.today10sec.diary.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,7 +24,7 @@ public class Diary {
 
     private boolean isUsed;
 
-    @ManyToOne
+    @ManyToOne @NonNull
     private Customer customer;
 
     @OneToMany
