@@ -15,8 +15,34 @@
     <title><spring:message code="diary.page.title" /></title>
     <link href="/static/css/styles.css" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous"/>
+    <script src="/static/js/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+<script>
 
+        const $diary = {
+            DATA: {
+            }, init: function () {
+                $diary.event();
+            }, event: function () {
+
+
+                <c:choose>
+                <c:when test="${isLogin == false}">
+                $("body").attr("onclick","$diary.logoutEvent();");
+                </c:when>
+                <c:otherwise>
+
+                </c:otherwise>
+                </c:choose>
+
+            }, logoutEvent(){
+                alert("You can use it after logging in.");
+                location.href = "/user/login"
+            }
+        };
+
+
+</script>
 </head>
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-vio">
@@ -34,6 +60,9 @@
     </ul>
 </nav>
 <div id="layoutSidenav">
+    <form>
+        <input type="hidden" value="${firstDay}" name="firstDay">
+    </form>
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-vio" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
@@ -69,21 +98,18 @@
                                 <thead>
                                 <tr>
                                     <th>시간</th>
-                                    <th>월</th>
-                                    <th class="week" colspan="2">화</th>
-                                    <th class="week" colspan="2">수</th>
-                                    <th class="week" colspan="2">목</th>
-                                    <th class="week" colspan="2">금</th>
-                                    <th class="week" colspan="2">토</th>
-                                    <th class="week" colspan="2">일</th>
+                                    <th><span class="day">${days[0]}</span><span class="dayOfWeek">${dayOfWeeks[0]}</span></th>
+                                    <c:forEach begin="1" end="6" varStatus="status">
+                                        <th class="week" colspan="2"><span class="day">${days[status.index]}</span><span class="dayOfWeek">${dayOfWeeks[status.index]}</span></th>
+                                    </c:forEach>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <c:forEach begin="0" end="12" varStatus="status">
                                     <tr>
                                         <c:forEach begin="0" end="6" >
-                                            <th class="time"><input type="number" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" value="${status.index+7}"></th>
-                                            <th class="week"><input type="text" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></th>
+                                            <th class="time"><input type="number" class="form-control form-control-sm" placeholder="" name="" value="${status.index+7}"></th>
+                                            <th class="week"><input type="text" class="form-control form-control-sm" placeholder="" ></th>
                                         </c:forEach>
                                     </tr>
                                 </c:forEach>
@@ -108,7 +134,6 @@
         </footer>
     </div>
 </div>
-<script src="/static/js/jquery-migrate-1.4.1.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
 <script src="/static/js/scripts.js"></script>
@@ -118,5 +143,10 @@
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
 <script src="/static/css/assets/demo/datatables-demo.js"></script>
+<script>
+    window.onload = function() {
+        $diary.init();
+    }
+</script>
 </body>
 </html>

@@ -10321,5 +10321,18 @@ body {
 }
 
 #weekDiary .time{
+  width: 60px;
   min-width: 60px;
+}
+
+#weekDiary .dayOfWeek{
+  margin-left: 5px;
+  color: #8977AD ;
+}
+
+#weekDiary input[type="number"]::-webkit-outer-spin-button,
+#weekDiary input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  opacity: 1;
 }
