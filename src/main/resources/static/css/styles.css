@@ -32,6 +32,8 @@
   --danger: #dc3545;
   --light: #f8f9fa;
   --dark: #343a40;
+  --vio-1028: #B191C2;
+  --vio-dark-1028: #B191C2;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -67,6 +69,7 @@ body {
   color: #212529;
   text-align: left;
   background-color: #fff;
+  min-width: 360px;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
@@ -159,7 +162,7 @@ sup {
 }
 
 a {
-  color: #007bff;
+  color: #B191C2;
   text-decoration: none;
   background-color: transparent;
 }
@@ -2442,8 +2445,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #8977AD;
+  border-color: #B191C2;
 }
 .btn-primary:hover {
   color: #fff;
