@@ -31,7 +31,4 @@ public class DiaryExceptionHandlers {
 
         return new ValidErrorResultData(errorDataList);
     }
-
-
-
 }

@@ -26,9 +26,9 @@ public class SameValueValidator implements ConstraintValidator<SameValue,Object>
         String fieldMatchValue = String.valueOf(new BeanWrapperImpl(object).getPropertyValue(fieldMatch));
 
         if (fieldValue == null) {
-            throw new RuntimeException("fieldValue can not null");
+            throw new RuntimeException("fieldValue can not be null");
         }else if(fieldMatchValue ==null ){
-            throw new RuntimeException("fieldMatchValue can not null");
+            throw new RuntimeException("fieldMatchValue can not be null");
         }
 
         if (fieldValue.equals(fieldMatchValue)){

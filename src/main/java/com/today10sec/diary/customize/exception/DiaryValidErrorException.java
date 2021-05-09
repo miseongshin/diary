@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * 공통 Validation 처리를 위한 Exception
+ * Validation Exception for Common Diary
  */
 @ResponseStatus(value= HttpStatus.BAD_REQUEST)
 @Getter

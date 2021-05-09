@@ -5,17 +5,18 @@ import com.today10sec.diary.customize.dto.CustomerSignUpData;
 import com.today10sec.diary.customize.enumeration.DIARY_URL_ENUM;
 import com.today10sec.diary.customize.exception.DiaryValidErrorException;
 import com.today10sec.diary.customize.util.DiaryTimeUtil;
+import com.today10sec.diary.customize.validator.Sequences;
 import com.today10sec.diary.mvc.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class CustomerController extends AbstrectController{
 
     @PostMapping("/signUp/ajax")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Map> signUpAjax(HttpServletRequest request, @Valid @RequestBody CustomerSignUpData customerSignUpData, BindingResult bindingResult) throws DiaryValidErrorException {
+    public ResponseEntity<Map> signUpAjax(HttpServletRequest request, @Validated(Sequences.class) @RequestBody CustomerSignUpData customerSignUpData, BindingResult bindingResult) throws DiaryValidErrorException {
 
         if (bindingResult.hasErrors()) {
             throw new DiaryValidErrorException(bindingResult, messageSource);

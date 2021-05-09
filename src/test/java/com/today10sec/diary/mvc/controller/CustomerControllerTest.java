@@ -3,7 +3,9 @@ package com.today10sec.diary.mvc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.gson.Gson;
 import com.today10sec.diary.customize.dto.CustomerSignUpData;
+import com.today10sec.diary.customize.dto.ValidErrorResultData;
 import com.today10sec.diary.customize.validator.SameValue;
 import com.today10sec.diary.customize.validator.SameValueValidator;
 import org.junit.jupiter.api.Assertions;
@@ -49,13 +51,9 @@ class CustomerControllerTest {
                 .andReturn();
 
         String result = mvcResult.getResponse().getContentAsString();
-        String[] errors = result.replaceAll("\"","").split(",");
-        for (String error:errors) {
-            if (error.indexOf("fieldName")>0){
-                Assertions.assertEquals("confirmPassword",error.split(":")[1],"confirmPassword not contian");
-                break;
-            }
-        }
+        Gson gson = new Gson();
+        ValidErrorResultData resultData = gson.fromJson(result, ValidErrorResultData.class);
+        Assertions.assertEquals("confirmPassword",resultData.getErrors().get(0).getFieldName(),"confirmPassword not contian");
 
     }
 

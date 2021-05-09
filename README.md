@@ -1,7 +1,7 @@
 # diary :: 오늘10초 일기 제작중
 2021.05.04~
 
-springboot2, jpa, junit5, jpa, bootstrap, html, css
+springboot2, jpa, junit5, jpa, bootstrap, html, css, docker
 
 ## 2021.05.04  
 1. 1차 ui 작업 진행   
