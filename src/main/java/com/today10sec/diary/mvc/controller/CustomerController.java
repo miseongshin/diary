@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * UserController
@@ -29,8 +27,8 @@ import java.util.Map;
 @RequestMapping("/customer")
 public class CustomerController extends AbstrectController{
 
-    private CustomerService customerService;
-    private MessageSource messageSource;
+    protected CustomerService customerService;
+    protected MessageSource messageSource;
 
 
 
@@ -58,13 +56,14 @@ public class CustomerController extends AbstrectController{
 
     @PostMapping("/signUp/ajax")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Map> signUpAjax(HttpServletRequest request, @Validated(Sequences.class) @RequestBody CustomerSignUpData customerSignUpData, BindingResult bindingResult) throws DiaryValidErrorException {
+    public ResponseEntity<Boolean> signUpAjax(HttpServletRequest request, @Validated(Sequences.class) @RequestBody CustomerSignUpData customerSignUpData, BindingResult bindingResult) throws DiaryValidErrorException {
 
         if (bindingResult.hasErrors()) {
             throw new DiaryValidErrorException(bindingResult, messageSource);
         }
 
-        Map result = new HashMap<>();
+        boolean result = customerService.saveCustomer(customerSignUpData);
+
 
         return ResponseEntity.ok(result);
     }
@@ -73,5 +72,10 @@ public class CustomerController extends AbstrectController{
     @Autowired
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
+    }
+
+    @Autowired
+    public CustomerService getCustomerService() {
+        return customerService;
     }
 }

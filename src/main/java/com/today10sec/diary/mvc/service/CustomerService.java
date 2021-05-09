@@ -4,7 +4,7 @@ import com.today10sec.diary.customize.dto.CustomerSignUpData;
 
 public interface CustomerService {
 
-    CustomerSignUpData addUser(CustomerSignUpData user);
+    boolean saveCustomer(CustomerSignUpData user);
 
     CustomerSignUpData updateUser(CustomerSignUpData user);
 

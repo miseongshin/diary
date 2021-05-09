@@ -34,25 +34,29 @@ class CustomerControllerTest {
     @Test
     void SIGN_UP_AJAX_VALID_CONFIRM_PW() throws Exception {
 
-        String expectedResult = "{\"validData\":true,\"errors\":[{\"locale\":null,\"fieldName\":\"confirmPassword\",\"message\":\"비밀번호와 비밀번호확인값이 일치하지 않습니다. \"}]}";
+        //given
         CustomerSignUpData customerSignUpData = new CustomerSignUpData("a@a.com","111111","222222" );
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson=ow.writeValueAsString(customerSignUpData);
 
+        //when
         MvcResult mvcResult= mockMvc.perform(
                 post("/customer/signUp/ajax")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andDo(print())
+        //then
                 .andExpect(status().isBadRequest())
                 .andReturn();
-
         String result = mvcResult.getResponse().getContentAsString();
+        //result = "{\"validData\":true,\"errors\":[{\"locale\":null,\"fieldName\":\"confirmPassword\",\"message\":\"비밀번호와 비밀번호확인값이 일치하지 않습니다. \"}]}";
         Gson gson = new Gson();
         ValidErrorResultData resultData = gson.fromJson(result, ValidErrorResultData.class);
+
+        //then
         Assertions.assertEquals("confirmPassword",resultData.getErrors().get(0).getFieldName(),"confirmPassword not contian");
 
     }

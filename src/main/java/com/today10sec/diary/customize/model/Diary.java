@@ -42,6 +42,10 @@ public class Diary {
     @Column(name = "UPDATE_AT")
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
-    private Date updateAt = new Date();
+    private Date updateAt;
+
+    public Diary(String title) {
+        this.title = title;
+    }
 }
 

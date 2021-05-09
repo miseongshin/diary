@@ -1,18 +1,29 @@
 package com.today10sec.diary.mvc.service.impl;
 
+import com.today10sec.diary.customize.dto.CustomerData;
 import com.today10sec.diary.customize.dto.CustomerSignUpData;
+import com.today10sec.diary.customize.model.Customer;
 import com.today10sec.diary.mvc.repository.CustomerRepository;
 import com.today10sec.diary.mvc.service.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 
 @Service
 public class DefaultCustomerService implements CustomerService {
 
-    private CustomerRepository customerRepository;
+    protected CustomerRepository customerRepository;
+    protected Converter<CustomerData, Customer> converter;
 
     @Override
-    public CustomerSignUpData addUser(CustomerSignUpData user) {
-        return null;
+    public boolean saveCustomer(CustomerSignUpData customerSignUpData) {
+
+        assertNotNull(customerSignUpData,"customerSignUpData can not be null!!");
+        Customer customer = converter.convert(customerSignUpData);
+        customerRepository.save(customer);
+        return true;
     }
 
     @Override
@@ -25,23 +36,14 @@ public class DefaultCustomerService implements CustomerService {
 
     }
 
-/*    public CustomerAddData addUser(CustomerAddData user){
-        Customer customer = customerRepository.save(new Customer(user.getEmail(),user.getPassword(),user.getName()));
-        return new CustomerAddData(customer.getEmail(), customer.getPassword(), customer.getName());
-    }
-
-    public CustomerAddData updateUser(CustomerAddData user){
-        Customer customer = customerRepository.save(new Customer(user.getEmail(),user.getPassword(),user.getName()));
-        return new CustomerAddData(customer.getEmail(), customer.getPassword(), customer.getName());
-    }
-
-    public void delete(String email, String password) {
-        customerRepository.delete(new Customer(email,password, ""));
-    }
-
     @Autowired
     public void setCustomerRepository(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-    }*/
+    }
+
+    @Autowired
+    public void setConverter(Converter<CustomerData, Customer> converter) {
+        this.converter = converter;
+    }
 }
 

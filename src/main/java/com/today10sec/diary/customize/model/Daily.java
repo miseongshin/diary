@@ -31,12 +31,12 @@ public class Daily {
     @ManyToOne @NonNull
     private Diary diary;
 
-    @Column(name = "CREATE_AT")
+    @Column(name = "CREATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
+    private Date createdAt;
 
-    @Column(name = "UPDATE_AT")
+    @Column(name = "UPDATED_AT")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updateAt = new Date();
+    private Date updatedAt = new Date();
 }
 

@@ -1,4 +1,4 @@
-/*package com.today10sec.diary.customize.etc;
+package com.today10sec.diary.customize.etc;
 
 import com.today10sec.diary.customize.model.Customer;
 import com.today10sec.diary.customize.model.Daily;
@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Transactional
@@ -24,13 +26,15 @@ public class JpaCreateTableRunner implements ApplicationRunner {
 
         Session session = entityManager.unwrap(Session.class);
 
-        Customer customer = new Customer();
+        Customer customer = new Customer("create@table.com","123455");
+        List<Diary> diaryList = new ArrayList<>();
+        Diary diary = new Diary("타이틀");
+        diaryList.add(diary);
+
         session.save(customer);
-        Diary diary = new Diary();
         session.save(diary);
         Daily daily = new Daily();
         session.save(daily);
 
     }
 }
-*/
