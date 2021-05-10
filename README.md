@@ -18,4 +18,8 @@ springboot2, jpa, junit5, jpa, bootstrap, html, css, docker
 - 목업테스트
 - UI 변경. 
 
+## 2021.05.09~10 
+-스프링 기본mvc 설정
+- 컨버터- 데이터 구조화 
+
 ![20210504](https://user-images.githubusercontent.com/24291415/117562697-d9014e80-b0db-11eb-9458-3b594f05a3c0.png)

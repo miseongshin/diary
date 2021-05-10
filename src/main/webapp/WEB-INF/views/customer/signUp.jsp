@@ -52,8 +52,9 @@
 
             }
         };
-        const $customerAdd = {
+        let $customerAdd = {
             DATA: {
+                onSignUp : false
             }, init: function () {
                 $customerAdd.event();
             }, event: function () {
@@ -69,10 +70,17 @@
                     datas["password"]=$("#password").val();
                     datas["confirmPassword"] =$("#confirmPassword").val();
 
+                    alert("회원가입이 진행중입니다. ");
+                    if ($customerAdd.DATA.onSignUp == true){
+                        return;
+                    }
+                    $customerAdd.DATA.onSignUp = true;
+
                     $commonCall.ajax("POST", "${customerAddAjaxUrl}" , datas, function (result) {
                         console.log(result);
+                        $customerAdd.DATA.onSignUp = false;
                     }, function (jqXHR, textStatus, errorThrown) {
-
+                        $customerAdd.DATA.onSignUp = false;
                     });
                 });
 
@@ -85,12 +93,9 @@
         };
 
 
-
-
     </script>
 </head>
 <body class="bg-vio">
-<div id="layoutAuthentication">
     <div id="layoutAuthentication_content">
         <main>
             <div class="container">

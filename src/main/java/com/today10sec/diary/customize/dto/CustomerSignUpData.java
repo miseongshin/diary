@@ -2,7 +2,6 @@ package com.today10sec.diary.customize.dto;
 
 import com.today10sec.diary.customize.validator.SameValue;
 import com.today10sec.diary.customize.validator.Sequences;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotEmpty;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @ToString(exclude = {"password", "confirmPassword"})
 @SameValue(field = "password", fieldMatch = "confirmPassword", groups= Sequences.Order6.class)
 public class CustomerSignUpData extends CustomerData{
@@ -24,6 +22,7 @@ public class CustomerSignUpData extends CustomerData{
     private String confirmPassword;
 
     public CustomerSignUpData(String email, String password, String confirmPassword) {
-        super();
+        super(email,password);
+        this.confirmPassword = confirmPassword;
     }
 }
