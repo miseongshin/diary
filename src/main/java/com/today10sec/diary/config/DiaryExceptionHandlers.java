@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,11 +24,18 @@ public class DiaryExceptionHandlers {
     public ValidErrorResultData ValidErrorExceptionHandler (DiaryValidErrorException diaryValidErrorException){
 
         MessageSource messageSource = diaryValidErrorException.getMessageSource();
-        BindingResult bindingResult = diaryValidErrorException.getBindingResult();
+        List<ValidErrorData> errorDataList = new ArrayList<>();
+        if(diaryValidErrorException.getBindingResult() != null){
+            BindingResult bindingResult = diaryValidErrorException.getBindingResult();
+            errorDataList = bindingResult.getFieldErrors()
+                    .stream().map(error-> new ValidErrorData(error, messageSource, diaryValidErrorException.getLocale())
+                    ).collect(Collectors.toList());
 
-        List<ValidErrorData> errorDataList = bindingResult.getFieldErrors()
-                .stream().map(error-> new ValidErrorData(error, messageSource)
-                ).collect(Collectors.toList());
+        } else {
+
+            errorDataList.add(new ValidErrorData(diaryValidErrorException.getTarget(), diaryValidErrorException.getMessageCode()
+                    ,diaryValidErrorException.getMessageSource(), diaryValidErrorException.getLocale()));
+        }
 
         return new ValidErrorResultData(errorDataList);
     }

@@ -15,17 +15,23 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 public class CustomerConverter implements Converter<CustomerData, Customer> {
     @Nullable
     @Override
-    public Customer convert(CustomerData CustomerData) {
+    public Customer convert(CustomerData customerData) {
 
-        assertNotNull(CustomerData,"Object can not be null!!");
+        assertNotNull(customerData,"Object can not be null!!");
         Customer customer= new Customer();
 
-        if (CustomerData instanceof CustomerSignUpData){
-            customer.setPassword(CustomerData.getPassword());
+        if (customerData instanceof CustomerSignUpData){
+            customer.setPassword(customerData.getPassword());
+            customer.setAuth(customer.getAuth());
             customer.setCreatedAt(new Date());
+            customer.setEnabled(true);
+            customer.setCredentialsNonExpired(false);
+            customer.setAccountNonLocked(true);
+            customer.setAccountNonExpired(true);
+
         }
 
-        customer.setEmail(CustomerData.getEmail());
+        customer.setEmail(customerData.getEmail());
 
         return customer;
     }

@@ -1,4 +1,4 @@
-package com.today10sec.diary.mvc.service.impl;
+/*package com.today10sec.diary.mvc.service.impl;
 
 import com.today10sec.diary.customize.model.Customer;
 import com.today10sec.diary.mvc.service.CustomerService;
@@ -32,4 +32,4 @@ public class DefaultCustomerServiceTest {
 
     }
 
-}
+}*/

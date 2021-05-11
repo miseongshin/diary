@@ -26,7 +26,10 @@ public class JpaCreateTableRunner implements ApplicationRunner {
 
         Session session = entityManager.unwrap(Session.class);
 
-        Customer customer = new Customer("create@table.com","123455");
+        Customer customer =Customer.builder()
+                .email("test@test.com")
+                .auth("A")
+                .password("11111").build();
         List<Diary> diaryList = new ArrayList<>();
         Diary diary = new Diary("타이틀");
         diaryList.add(diary);

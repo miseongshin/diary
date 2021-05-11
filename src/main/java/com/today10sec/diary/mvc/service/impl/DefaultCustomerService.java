@@ -1,37 +1,44 @@
 package com.today10sec.diary.mvc.service.impl;
 
-import com.today10sec.diary.customize.dto.CustomerSignUpData;
 import com.today10sec.diary.customize.model.Customer;
 import com.today10sec.diary.mvc.repository.CustomerRepository;
 import com.today10sec.diary.mvc.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-
 @Service
-public class DefaultCustomerService implements CustomerService {
+public class DefaultCustomerService implements CustomerService, UserDetailsService {
 
     protected CustomerRepository customerRepository;
 
     @Override
-    public boolean saveCustomer(Customer customer) {
+    public Boolean isExistEmail(String email) {
+        try{
+            loadUserByUsername(email);
+            return Boolean.TRUE;
+        }catch (UsernameNotFoundException e){
 
-        assertNotNull(customer,"customerSignUpData can not be null!!");
-        assertNotNull(customer.getEmail(),"email can not be null!!");
-        customerRepository.save(customer);
-        return true;
+        }
+            return Boolean.FALSE;
     }
 
     @Override
-    public CustomerSignUpData updateUser(CustomerSignUpData user) {
-        return null;
+    public Integer save(Customer customer){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encryptedPassword = encoder.encode(customer.getPassword());
+        customer.setPassword(encoder.encode(customer.getPassword()));
+        return customerRepository.save(customer).getId();
     }
 
     @Override
-    public void delete(String email, String password) {
-
+    public Customer loadUserByUsername(String email) throws UsernameNotFoundException {
+        return customerRepository.findByEmail(email)
+                .orElseThrow(()-> new UsernameNotFoundException(email));
     }
+
 
     @Autowired
     public void setCustomerRepository(CustomerRepository customerRepository) {

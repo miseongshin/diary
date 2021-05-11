@@ -21,8 +21,8 @@ public class CustomerSignUpData extends CustomerData{
     @Length(min= 6, max= 12, groups= Sequences.Order7.class)
     private String confirmPassword;
 
-    public CustomerSignUpData(String email, String password, String confirmPassword) {
-        super(email,password);
+    public CustomerSignUpData(String email, String password, String confirmPassword, String auth) {
+        super(email, password, auth);
         this.confirmPassword = confirmPassword;
     }
 }

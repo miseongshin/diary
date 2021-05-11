@@ -3,6 +3,7 @@ package com.today10sec.diary.mvc.controller;
 
 import com.today10sec.diary.customize.dto.CustomerData;
 import com.today10sec.diary.customize.dto.CustomerSignUpData;
+import com.today10sec.diary.customize.dto.ResultData;
 import com.today10sec.diary.customize.enumeration.DIARY_URL_ENUM;
 import com.today10sec.diary.customize.exception.DiaryValidErrorException;
 import com.today10sec.diary.customize.model.Customer;
@@ -12,8 +13,6 @@ import com.today10sec.diary.mvc.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +39,7 @@ public class CustomerController extends AbstrectController{
     public ModelAndView login(){
 
         ModelAndView modelAndView = new ModelAndView("customer/login");
-        modelAndView.addObject("customerAddUrl",DIARY_URL_ENUM.CUSTOMER_SIGN_UP.getUrl());
+        modelAndView.addObject("customerAddUrl",DIARY_URL_ENUM.CUSTOMER_SIGN_UP.getURI());
         return modelAndView;
     }
 
@@ -48,28 +47,32 @@ public class CustomerController extends AbstrectController{
     public ModelAndView signUp(){
 
         if (isLogin()){
-            return new ModelAndView("redirect:"+DIARY_URL_ENUM.DIARY_VIEW.getUrl()+ DiaryTimeUtil.getTodayOnlyNumberText());
+            return new ModelAndView("redirect:"+DIARY_URL_ENUM.DIARY_VIEW.getURI()+ DiaryTimeUtil.getTodayOnlyNumberText());
         }
 
         ModelAndView modelAndView = new ModelAndView("customer/signUp");
-        modelAndView.addObject("customerLoginUrl",DIARY_URL_ENUM.CUSTOMER_LOGIN.getUrl());
-        modelAndView.addObject("customerAddAjaxUrl",DIARY_URL_ENUM.CUSTOMER_SIGN_UP_AJAX.getUrl());
+        modelAndView.addObject("customerLoginUrl",DIARY_URL_ENUM.CUSTOMER_LOGIN.getURI());
+        modelAndView.addObject("customerSignUp",DIARY_URL_ENUM.CUSTOMER_SIGN_UP.getURI());
 
         return modelAndView;
     }
 
-    @PostMapping("/signUp/ajax")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Boolean> signUpAjax(HttpServletRequest request, @Validated(Sequences.class) @RequestBody CustomerSignUpData customerSignUpData, BindingResult bindingResult) throws DiaryValidErrorException {
+    @PostMapping("/signUp")
+    @ResponseBody
+    public ResultData signUpAjax(HttpServletRequest request, @Validated(Sequences.class) @RequestBody CustomerSignUpData customerSignUpData, BindingResult bindingResult) throws DiaryValidErrorException {
 
         if (bindingResult.hasErrors()) {
-            throw new DiaryValidErrorException(bindingResult, messageSource);
+            throw new DiaryValidErrorException(bindingResult, messageSource, request.getLocale());
+        }
+
+        if(customerService.isExistEmail(customerSignUpData.getEmail())){
+            throw new DiaryValidErrorException("email","join.fail.already", messageSource, request.getLocale());
         }
 
         Customer customer = customerConverter.convert(customerSignUpData);
-        boolean result = customerService.saveCustomer(customer);
+        int result = customerService.save(customer);
 
-        return ResponseEntity.ok(result);
+        return new ResultData(200, messageSource.getMessage("join.success",null, request.getLocale()), null);
     }
 
 

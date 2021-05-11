@@ -18,15 +18,25 @@
     <script>
 
         const $commonCall={
-            ajax: function(method, url,datas, successCallback, failCallback){
+            ajax: function(method, url, datas , successCallback, failCallback){
 
 
                 $.ajax({
                     url: url,
                     data: JSON.stringify(datas),
                     type: method,
+                    xhrFields: {
+                        withCredentials: true
+                    },
                     datatype: 'json',
                     contentType: "application/json;charset=UTF-8",
+                    beforeSend: function( xhr ) {
+                        if(method.toLowerCase() == "post"){
+                            const header = $("input[name='_csrf_header']").val();
+                            const csrf = $("input[name='_csrf']").val();
+                            xhr.setRequestHeader(header, csrf);
+                        }
+                    },
                     success: function (data) {
                         if(typeof successCallback == "function"){
                             successCallback(data);
@@ -40,7 +50,6 @@
                             const message = jqXHR.responseJSON.errors[0].message;
                             alert(message);
                             $("#"+filed).focus();
-                            return;
                         }
                         if(typeof failCallback == "function"){
                             failCallback(jqXHR, textStatus, errorThrown);
@@ -52,11 +61,12 @@
 
             }
         };
-        let $customerAdd = {
+        let $customerSignUp = {
             DATA: {
                 onSignUp : false
             }, init: function () {
-                $customerAdd.event();
+                $customerSignUp.event();
+
             }, event: function () {
 
                 <c:choose>
@@ -65,22 +75,28 @@
                 </c:when>
                 <c:otherwise>
                 $(document).on("click", "#createAccount",function(){
-                    let datas = {};
-                    datas["email"]=$("#email").val();
-                    datas["password"]=$("#password").val();
-                    datas["confirmPassword"] =$("#confirmPassword").val();
 
-                    alert("회원가입이 진행중입니다. ");
-                    if ($customerAdd.DATA.onSignUp == true){
+                    let data = {};
+                    data["email"]=$("#email").val();
+                    data["password"]=$("#password").val();
+                    data["confirmPassword"]=$("#confirmPassword").val();
+
+                    if ($customerSignUp.DATA.onSignUp == true){
+                        alert("회원가입이 진행중입니다. ");
                         return;
                     }
-                    $customerAdd.DATA.onSignUp = true;
+                    $customerSignUp.DATA.onSignUp = true;
 
-                    $commonCall.ajax("POST", "${customerAddAjaxUrl}" , datas, function (result) {
-                        console.log(result);
-                        $customerAdd.DATA.onSignUp = false;
+                    $commonCall.ajax("POST", "${customerSignUp}" , data, function (result) {
+                        alert("회원가입이 성공했습니다.");
+                        $("#email").val("");
+                        $("#password").val("");
+                        $("#confirmPassword").val("");
+
+                        $customerSignUp.loginEvent();
+
                     }, function (jqXHR, textStatus, errorThrown) {
-                        $customerAdd.DATA.onSignUp = false;
+                        $customerSignUp.DATA.onSignUp = false;
                     });
                 });
 
@@ -96,6 +112,7 @@
     </script>
 </head>
 <body class="bg-vio">
+<div id="layoutAuthentication">
     <div id="layoutAuthentication_content">
         <main>
             <div class="container">
@@ -104,27 +121,30 @@
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
                             <div class="card-body">
-                                <form>
+                                <form id="sign-up" action="${customerSignUp}" method="POST">
                                     <div class="form-group">
                                         <label class="small mb-1" for="email">Email</label>
-                                        <input class="form-control py-4" autocomplete="off" id="email" type="email" aria-describedby="emailHelp" placeholder="Enter email address" />
+                                        <input class="form-control py-4" autocomplete="new-password" id="email" name="email" type="email" aria-describedby="emailHelp" placeholder="Enter email address" />
                                     </div>
                                     <div class="form-row">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="small mb-1" for="password">Password</label>
-                                                <input class="form-control py-4" id="password" type="password" placeholder="Enter password" />
+                                                <input class="form-control py-4" autocomplete="new-password" id="password" name="password" type="password" placeholder="Enter password" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="small mb-1" for="confirmPassword">Confirm Password</label>
-                                                <input class="form-control py-4" id="confirmPassword" type="password" placeholder="Confirm password" />
+                                                <input class="form-control py-4" id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm password" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group mt-4 mb-0"><a class="btn btn-primary btn-block" id="createAccount">Create Account</a></div>
+                                    <input type="hidden" name="auth" value="ROLE_USER">
                                 </form>
+                                <input type="hidden" name="_csrf" value="${_csrf.token}">
+                                <input type="hidden" name="_csrf_header" value="${_csrf.headerName}">
                             </div>
                             <div class="card-footer text-center">
                                 <div class="small"><a href="${customerLoginUrl}">Have an account? Go to login</a></div>
@@ -154,7 +174,7 @@
 <script src="/static/js/scripts.js"></script>
 <script>
     window.onload = function() {
-        $customerAdd.init();
+        $customerSignUp.init();
     }
 
 </script>

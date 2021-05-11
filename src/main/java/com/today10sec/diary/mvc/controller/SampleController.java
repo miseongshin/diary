@@ -2,8 +2,6 @@ package com.today10sec.diary.mvc.controller;
 
 import com.today10sec.diary.customize.enumeration.DIARY_URL_ENUM;
 import com.today10sec.diary.customize.util.DiaryTimeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,36 +13,27 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/diary")
-public class DiaryController extends AbstrectController{
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+@RequestMapping("/sample")
+public class SampleController extends AbstrectController {
+
 
     /**
-     * viewByYearDay
+     * sample ByYearDay
      * @param date find day
      * @param request
      * @return
      */
-    @GetMapping({"/", "/view/{date}", "/view/{date}/**"})
-    public ModelAndView viewByYearDay(@PathVariable("date") String date
-    , HttpServletRequest request){
-
+    @GetMapping({"/","/{date}"})
+    public ModelAndView sampleByYearDay(@PathVariable("date") String date
+            , HttpServletRequest request){
 
         Optional<LocalDate> localDate  = DiaryTimeUtil.getLocalDate(date);
         if (!localDate.isPresent())
-            return new ModelAndView("redirect:"+DIARY_URL_ENUM.DIARY_VIEW.getURI()+ DiaryTimeUtil.getTodayOnlyNumberText());
+            return new ModelAndView("redirect:"+ DIARY_URL_ENUM.SAMPLE.getTodayViewURI());
 
-        ModelAndView modelAndView = new ModelAndView("diary/view");
+        ModelAndView modelAndView = new ModelAndView("/sample/sample");
         modelAndView = setViewByYearDayData(request, modelAndView, date, localDate);
-
-        if(isLogin()){
-            //[TODO]로그인 프로세스 완료시
-            //modelAndView.addObject("isLogin", true);
-        } else {
-            //modelAndView.addObject("isLogin", true);
-        }
         return modelAndView;
     }
-
 
 }
